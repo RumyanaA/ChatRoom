@@ -36,3 +36,19 @@
     transform: rotate(360deg);
   }
 }
+.chat{
+  height:500px;
+  width:50%;
+  background-color: #d5d7d8;
+}
+.messages-box{
+  
+  overflow: auto;
+  margin-left:152px;
+  height: 410px;
+  width:80%;
+  background-color: rgb(88, 193, 235);
+}
+.input-button{
+margin-left:152px;
+}

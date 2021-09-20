@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 const httpServer = createServer(app);
-
+var chatRoomData=['hi','hi2'];
 const io = new Server(httpServer, {  cors: {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"]
@@ -18,7 +18,16 @@ const io = new Server(httpServer, {  cors: {
   app.use('/',routes)
   
 io.on("connection", (socket) => {
-    console.log(socket.id)
+  socket.on('newUserConnected', username=>{
+    io.emit('newUserJoined',`${username} has entered the chat`)
+  })
+    
+    socket.on('newMessage', messageData=>{
+      chatRoomData.push(messageData)
+      io.emit('updateChat',messageData)
+    })
+
+
 });
 
 

@@ -1,70 +1,52 @@
 import React from "react";
 import { Component } from "react";
+import ChatComponent from "./ChatComponent";
 import {socket} from './../Services/socket'
+import Button from "../ReusableComponents/Button";
+import AddChatComponent from "./AddChatModal";
 class Chat extends Component{
     constructor(props){
         super()
-        this.urlParam = props.match.params.username;
+        this.urlParams=props.match.params.username;
         this.state={
-            inputValue:'',
-            sentMessages:[]
+            roomNames:['General chat'],
+            show:false,
+            toRender:<ChatComponent urlParams={this.urlParams} chatName='General chat'/>
         }
-        this.handleChange=this.handleChange.bind(this);
-        this.sendMessage=this.sendMessage.bind(this);
-        this.handleKeyPress=this.handleKeyPress.bind(this);
-        socket.on('updateChat', message=>{
-            var allMessages=this.state.sentMessages
-            allMessages.push(message)
-            this.setState({sentMessages: allMessages})
-        })
+        this.ModalShow=this.ModalShow.bind(this);
+        this.handleClose=this.handleClose.bind(this);
+        this.getName=this.getName.bind(this);
+        this.changeToRender=this.changeToRender.bind(this)
     }
-    handleChange(event){
-        var input = this.state
-        input[event.target.name]=event.target.value
-        this.setState(input)
+    ModalShow(){
+        this.setState({show:true})
     }
-    sendMessage(){
-        var inputData = this.state.inputValue
-        if(inputData!=''){
-            var messageInfo=`${this.props.match.params.username} : ${inputData}` 
-            
-            socket.emit('newMessage', messageInfo)
-            inputData=''
-            this.setState({inputValue:inputData})
-        }
-        
+    handleClose(data){
+        this.setState({show:data})
     }
-    handleKeyPress(event){
-        if(event.key==='Enter'){
-            this.sendMessage()
-        }
+    getName(data){
+        var oldRoomNames=this.state.roomNames
+        oldRoomNames.push(data)
+        this.setState({roomNames:oldRoomNames})
     }
-    componentDidMount(){
-        var username=this.props.match.params.username
-        socket.emit('newUserConnected', username)
-        socket.on('newUserJoined',greeting=>{
-            var allMessages=this.state.sentMessages
-            allMessages.push(greeting)
-            this.setState({sentMessages: allMessages})
-        })
-    
-}
+    changeToRender(event){
+        this.setState({toRender:<ChatComponent urlParams={this.urlParams} chatName={event.currentTarget.name}/>})
+    }
     render(){
         return(
-            <div>
             <div className='chat'>
-                <div className='messages-box'>
-                    {
-                        this.state.sentMessages.map((item, index)=>{
-                        return(<p key={index}>{item}</p>
-                        )})
-                    }
-                </div>
-                <div className='input-button'>
-                <input className='inputfield' type='text' name='inputValue' value={this.state.inputValue} onChange={this.handleChange} onKeyPress={this.handleKeyPress} ></input>
-                <button className='sendButton' type='button' onClick={this.sendMessage} >Send</button>
-                </div>
-            </div>
+                <Button label='Add Chat' onClick={this.ModalShow}/>
+                <AddChatComponent showModal={this.state.show} handleClose={this.handleClose} getName={this.getName}/>
+                 {this.state.toRender}
+                <div className='chatRooms'>{this.state.roomNames.map((item)=>{
+                    return(<ul>
+                        <li className='buttonLis'> <Button className='openChatButton' type='button' name={item} onClick={this.changeToRender} label={item}/></li>
+                    </ul>
+                            
+                    )
+                })}
+          
+           </div>
             </div>
         )
     

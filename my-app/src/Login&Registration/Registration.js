@@ -15,11 +15,15 @@ class Registration extends CookiesJar{
         }
         this.handleChange = this.handleChange.bind(this);
         this.submit = this.submit.bind(this);
+        this.openLogin=this.openLogin.bind(this);
     }
     handleChange(event) {
         var userData = this.state;
         userData[event.target.name] = event.target.value;
         this.setState(userData);
+    }
+    openLogin(){
+        
     }
     
       async submit(){
@@ -31,20 +35,20 @@ class Registration extends CookiesJar{
         var res = await axios.post('http://localhost:8080/Register', userData);
         var response = res.data;
         this.setCookie('UserToken', response,'')
-        alert('registration completed')
         this.props.history.push(`/Chat/${userData.username}`);
       }
     render(){
         return(
-            <div>
+            <div className='registration-form'>
+               
                 <label><b>Registration</b></label>
-                <label>Username</label>
-                <InputField type='text' name='username' onChange={this.handleChange}/>
-                <label>Email</label>
-                <InputField type='text' name='email' onChange={this.handleChange}/>
-                <label>Password</label>
-                <InputField type='password' name='password' onChange={this.handleChange}/>
-                <Button type='submit' label='Register' onClick={this.submit}/>
+                <label className='nameField'>Username</label>
+                <InputField className='nameField' type='text' name='username' onChange={this.handleChange}/>
+                <label className='nameField'>Email</label>
+                <InputField className='nameField' type='text' name='email' onChange={this.handleChange}/>
+                <label className='nameField'>Password</label>
+                <InputField className='nameField' type='password' name='password' onChange={this.handleChange}/>
+                <Button className='nameField' type='submit' label='Register' onClick={this.submit}/>
             </div>
         )
     }

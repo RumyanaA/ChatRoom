@@ -17,5 +17,26 @@ static async addNewUser(userData){
         logger.error(e.message)
     }
 }
+static async checkUserData(userData) {
+    try {
+        var query = {
+            username: userData.username
+        }
+        var result = await client.get().collection("Users").find(query).toArray()
+        if (result.length == 1) {
+            const verified = bcrypt.compareSync(userData.password, result[0].password);
+            if (verified == true) {
+                return (result[0]._id);
+            } else {
+                return '-1';
+            }
+        } else {
+            return '-1';
+        }
+    }
+    catch (e) {
+        logger.error(e.message);
+    }
+}
 }
 module.exports=UsersModel

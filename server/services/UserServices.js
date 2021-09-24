@@ -8,5 +8,14 @@ static async Register(userData){
     return token
 
 }
+static async createTokenOnLogin(loginData){
+    var userId = await UsersModel.checkUserData(loginData)
+    if(userId!='-1'){
+        var token = jwt.sign({ "id": userId }, config.JWT_SECRET)
+        return token;
+    }else{
+        return '-1'
+    }
+}
 }
 module.exports=UserServices

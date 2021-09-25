@@ -1,3 +1,4 @@
+import axios from "axios";
 import React from "react";
 import { Component } from "react";
 import {socket} from './../Services/socket'
@@ -8,7 +9,7 @@ class ChatComponent extends Component{
         this.urlParam = props.urlParams
         this.state={
             inputValue:'',
-            sentMessages:[]
+            sentMessages: []
         }
         this.handleChange=this.handleChange.bind(this);
         this.sendMessage=this.sendMessage.bind(this);
@@ -27,9 +28,9 @@ class ChatComponent extends Component{
     sendMessage(){
         var inputData = this.state.inputValue
         if(inputData!=''){
-            var messageInfo=`${this.props.match.params.username} : ${inputData}` 
+            var messageInfo={ message:`${this.urlParam} : ${inputData}` , chatID: this.props.chatId}
             
-            socket.emit('newMessage', messageInfo)
+            socket.emit('newMessage', JSON.stringify(messageInfo))
             inputData=''
             this.setState({inputValue:inputData})
         }
@@ -40,11 +41,28 @@ class ChatComponent extends Component{
             this.sendMessage()
         }
     }
-    componentDidMount(){
+    async componentDidUpdate(prevProps){
+        if(this.props.chatId!=prevProps.chatId){
+        var chatHistory = await axios.get('http://localhost:8080/GetChatHistory',{params:{
+            id:this.props.chatId
+        }})
+        var allMessages=this.state.sentMessages
+        allMessages=chatHistory.data
+
+        this.setState({ sentMessages: allMessages})
+    }
+}
+   async componentDidMount(){
+       
+    var chatHistory = await axios.get('http://localhost:8080/GetChatHistory',{params:{
+        id:this.props.chatId
+    }})
+    var allMessages=this.state.sentMessages
+    allMessages=chatHistory.data
         var username=this.urlParam
         socket.emit('newUserConnected', username)
         socket.on('newUserJoined',greeting=>{
-            var allMessages=this.state.sentMessages
+            
             allMessages.push(greeting)
             this.setState({sentMessages: allMessages})
         })

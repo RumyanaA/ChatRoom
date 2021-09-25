@@ -1,1 +1,12 @@
 error: Sep-19-2021 15:37:26: 	Cannot read property 'collection' of null
+error: Sep-24-2021 14:43:37: 	jwt must be provided
+error: Sep-24-2021 18:12:00: 	Cannot read property 'messages' of undefined
+error: Sep-24-2021 18:26:50: 	Cannot read property 'messages' of undefined
+error: Sep-24-2021 18:27:33: 	Cannot read property 'messages' of undefined
+error: Sep-24-2021 18:46:14: 	Cannot read property 'messages' of undefined
+error: Sep-24-2021 18:46:17: 	Cannot read property 'messages' of undefined
+error: Sep-24-2021 18:51:14: 	Cannot read property 'messages' of undefined
+error: Sep-24-2021 18:52:29: 	Cannot read property 'messages' of undefined
+error: Sep-24-2021 18:52:42: 	Cannot read property 'messages' of undefined
+error: Sep-24-2021 18:52:57: 	Cannot read property 'messages' of undefined
+error: Sep-24-2021 18:53:52: 	Cannot read property 'messages' of undefined

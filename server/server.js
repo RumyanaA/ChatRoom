@@ -4,11 +4,13 @@ var cors = require('cors');
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 var routes = require('./routes/routes.js')
+var ChatController=require('./controller/chatController')
 const app = express();
 app.use(express.json());
 app.use(cors());
 const httpServer = createServer(app);
-var chatRoomData=['hi','hi2'];
+
+var chatRooms=[];
 const io = new Server(httpServer, {  cors: {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"]
@@ -23,8 +25,12 @@ io.on("connection", (socket) => {
   })
     
     socket.on('newMessage', messageData=>{
-      chatRoomData.push(messageData)
-      io.emit('updateChat',messageData)
+      var emittedMessageData=JSON.parse(messageData)
+      ChatController.newMessage(emittedMessageData)
+      io.emit('updateChat',emittedMessageData.message)
+    })
+    socket.on('newChatRoom',data=>{
+      io.emit('addNewChatRoom',data)
     })
 
 

@@ -8,8 +8,10 @@ import Button from 'react-bootstrap/Button'
 import CloseButton from 'react-bootstrap/esm/CloseButton'
 import InputField from '../ReusableComponents/InputField'
 import axios from 'axios'
+import CookiesJar from '../CookiesJar'
 
-class AddChatComponent extends Component{
+
+class AddChatComponent extends CookiesJar{
     constructor(props){
         super();
        this.state={
@@ -29,8 +31,18 @@ class AddChatComponent extends Component{
         this.setState(oldState)
     }
    async saveChatName(){
-       
-        this.props.getName(this.state.chatName)
+       var token=this.getCookie('UserToken')
+       var newChatRoom={
+           chatName: this.state.chatName,
+           messages:[],
+           createdby: token
+       }
+       var result = await axios.post('http://localhost:8080/CreateChatRoom', newChatRoom);
+       var newChatData={
+           chatName: this.state.chatName,
+           id: result.data
+       }
+        this.props.getName(newChatData)
         this.props.handleClose(false)
     }
     render(){

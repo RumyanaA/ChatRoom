@@ -11,9 +11,9 @@ class Chat extends Component{
         super()
         this.urlParams=props.match.params.username;
         this.state={
-            roomNames:[{chatName: 'General chat',id: '614db8ed4c94aedcb67c3501'}],
+            roomNames:[{chatName: 'General chat', _id: '614db8ed4c94aedcb67c3501'}],
             show:false,
-            toRender:<ChatComponent urlParams={this.urlParams} chatName='General chat' chatId={'614db8ed4c94aedcb67c3501'} sentMessages={[]}/>
+            toRender:<ChatComponent urlParams={this.urlParams} chatName='General chat' chatId={'614db8ed4c94aedcb67c3501'} />
         }
         this.ModalShow=this.ModalShow.bind(this);
         this.handleClose=this.handleClose.bind(this);
@@ -35,7 +35,7 @@ class Chat extends Component{
         socket.emit('newChatRoom',data)
     }
     changeToRender(event){
-        this.setState({toRender:<ChatComponent urlParams={this.urlParams} chatName={event.currentTarget.name} chatId={event.currentTarget.id} sentMessages={[]}/>})
+        this.setState({toRender:<ChatComponent urlParams={this.urlParams} chatName={event.currentTarget.name} chatId={event.currentTarget.id} />})
     }
     async componentDidMount(){
         var allChatRooms = await axios.get('http://localhost:8080/getChatRooms')

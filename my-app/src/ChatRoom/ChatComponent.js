@@ -9,15 +9,18 @@ class ChatComponent extends Component{
         this.urlParam = props.urlParams
         this.state={
             inputValue:'',
-            sentMessages: []
+            sentMessages: [],
+            idChat:''
         }
         this.handleChange=this.handleChange.bind(this);
         this.sendMessage=this.sendMessage.bind(this);
         this.handleKeyPress=this.handleKeyPress.bind(this);
         socket.on('updateChat', message=>{
             var allMessages=this.state.sentMessages
-            allMessages.push(message)
-            this.setState({sentMessages: allMessages})
+        if(message.chatID===this.state.idChat){
+                allMessages.push(message.message)
+            this.setState({sentMessages: allMessages })
+            }
         })
     }
     handleChange(event){
@@ -48,8 +51,8 @@ class ChatComponent extends Component{
         }})
         var allMessages=this.state.sentMessages
         allMessages=chatHistory.data
-
-        this.setState({ sentMessages: allMessages})
+        
+        this.setState({ sentMessages: allMessages , idChat:this.props.chatId})
     }
 }
    async componentDidMount(){
@@ -57,6 +60,7 @@ class ChatComponent extends Component{
     var chatHistory = await axios.get('http://localhost:8080/GetChatHistory',{params:{
         id:this.props.chatId
     }})
+    this.setState({idChat:this.props.chatId})
     var allMessages=this.state.sentMessages
     allMessages=chatHistory.data
         var username=this.urlParam
@@ -75,7 +79,7 @@ class ChatComponent extends Component{
                 
                 <div className='messages-box'>
                 <h><b>{this.props.chatName}</b></h>
-                    {
+                        {
                         this.state.sentMessages.map((item, index)=>{
                         return(<p key={index}>{item}</p>
                         )})

@@ -27,7 +27,7 @@ io.on("connection", (socket) => {
     socket.on('newMessage', messageData=>{
       var emittedMessageData=JSON.parse(messageData)
       ChatController.newMessage(emittedMessageData)
-      io.emit('updateChat',emittedMessageData.message)
+      io.emit('updateChat',emittedMessageData)
     })
     socket.on('newChatRoom',data=>{
       io.emit('addNewChatRoom',data)

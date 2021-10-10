@@ -21,8 +21,13 @@ class ChatServices {
         var chatId={
             _id: ObjectId(messageData.chatID)
         }
+        var messageToPush={
+            user:messageData.user,
+            message:messageData.message,
+            timeStamp:messageData.timeStamp
+        }
         var newMessages={$addToSet:{
-            'messages': messageData.message,
+            'messages': messageToPush,
                      
         }
         }

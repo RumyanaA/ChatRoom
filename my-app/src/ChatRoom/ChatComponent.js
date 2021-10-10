@@ -17,11 +17,15 @@ class ChatComponent extends Component{
         this.handleKeyPress=this.handleKeyPress.bind(this);
         socket.on('updateChat', message=>{
             var allMessages=this.state.sentMessages
-        if(message.chatID===this.state.idChat){
-                allMessages.push(message.message)
-            this.setState({sentMessages: allMessages })
+            var messageToPush={
+                user:message.user,
+                message:message.message,
+                timeStamp:message.timeStamp
             }
+                allMessages.push(messageToPush)
+            this.setState({sentMessages: allMessages })
         })
+        
     }
     handleChange(event){
         var input = this.state
@@ -31,7 +35,12 @@ class ChatComponent extends Component{
     sendMessage(){
         var inputData = this.state.inputValue
         if(inputData!=''){
-            var messageInfo={ message:`${this.urlParam} : ${inputData}` , chatID: this.props.chatId}
+            var messageInfo={
+                user: this.urlParam,
+                 message:inputData,
+                 timeStamp: new Date(),
+                  chatID: this.props.chatId,
+                }
             
             socket.emit('newMessage', JSON.stringify(messageInfo))
             inputData=''
@@ -46,31 +55,47 @@ class ChatComponent extends Component{
     }
     async componentDidUpdate(prevProps){
         if(this.props.chatId!=prevProps.chatId){
+            var data={
+                chatID:prevProps.chatId,
+                user:this.urlParam
+            }
+            socket.emit('leftRoom', data)
+        socket.emit('createRoom',this.props.chatId)
         var chatHistory = await axios.get('http://localhost:8080/GetChatHistory',{params:{
             id:this.props.chatId
         }})
         var allMessages=this.state.sentMessages
         allMessages=chatHistory.data
-        
         this.setState({ sentMessages: allMessages , idChat:this.props.chatId})
+        var data={
+            username: this.urlParam,
+            chatID: this.props.chatId
+        }
+            socket.emit('newUserConnected', data)
+            socket.on('newUserJoined',greeting=>{  
+                allMessages.push(greeting)
+                this.setState({sentMessages: allMessages})
+            })
     }
 }
    async componentDidMount(){
-       
     var chatHistory = await axios.get('http://localhost:8080/GetChatHistory',{params:{
         id:this.props.chatId
     }})
     this.setState({idChat:this.props.chatId})
+    socket.emit('createRoom',this.props.chatId)
     var allMessages=this.state.sentMessages
     allMessages=chatHistory.data
-        var username=this.urlParam
-        socket.emit('newUserConnected', username)
+    var data={
+        username: this.urlParam,
+        chatID: this.props.chatId
+    }
+        socket.emit('newUserConnected', data)
         socket.on('newUserJoined',greeting=>{
-            
+            console.log(greeting)
             allMessages.push(greeting)
             this.setState({sentMessages: allMessages})
-        })
-    
+        })   
 }
     render(){
         return(
@@ -81,7 +106,12 @@ class ChatComponent extends Component{
                 <h><b>{this.props.chatName}</b></h>
                         {
                         this.state.sentMessages.map((item, index)=>{
-                        return(<p key={index}>{item}</p>
+                        return(<div className='' key={index}>
+                           
+                            <p className='message'>{item.message} <br></br>
+                            <span className='userAndTime'>{` ${item.user}  ${item.timeStamp}`} </span>
+                            </p>
+                            </div>
                         )})
                     }
                 </div>

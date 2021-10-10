@@ -11,9 +11,9 @@ class ChatsModel {
             logger.error(e.message)
         }
     }
-    static async findChatAndInsertMsg(chatId,newMessages){
+    static async findChatAndInsertMsg(chatId,newMessage){
         try{
-            var result = await client.get().collection('ChatRooms').findOneAndUpdate(chatId,newMessages)
+            var result = await client.get().collection('ChatRooms').findOneAndUpdate(chatId,newMessage)
         }catch(e){
             logger.error(e.message)
         }

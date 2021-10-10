@@ -10,6 +10,7 @@ class Chat extends Component{
     constructor(props){
         super()
         this.urlParams=props.match.params.username;
+        this.openedChat=''
         this.state={
             roomNames:[{chatName: 'General chat', _id: '614db8ed4c94aedcb67c3501'}],
             show:false,
@@ -42,6 +43,7 @@ class Chat extends Component{
         var oldState=this.state.roomNames
         oldState=allChatRooms.data
         this.setState({roomNames:oldState})
+        
     }
     render(){
         return(

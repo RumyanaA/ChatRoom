@@ -16,3 +16,7 @@ error: Oct-05-2021 14:28:35: 	Cannot read property 'messages' of undefined
 error: Oct-05-2021 14:30:18: 	Cannot read property 'messages' of undefined
 error: Oct-05-2021 14:30:44: 	Cannot read property 'messages' of undefined
 error: Oct-05-2021 14:30:51: 	Cannot read property 'messages' of undefined
+error: Oct-10-2021 18:54:55: 	ChatsModel.addNewParticipant is not a function
+error: Oct-10-2021 18:58:28: 	ChatsModel.addNewParticipant is not a function
+error: Oct-14-2021 15:31:44: 	Cannot read property 'find' of undefined
+error: Oct-14-2021 15:31:48: 	Cannot read property 'find' of undefined

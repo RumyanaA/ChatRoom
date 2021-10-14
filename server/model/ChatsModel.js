@@ -11,6 +11,37 @@ class ChatsModel {
             logger.error(e.message)
         }
     }
+    static async addNewParticipant(chatId,data){
+        try{
+            var result = await client.get().collection('ChatRooms').findOneAndUpdate(chatId,data)
+            return 'leave'
+        }catch(e){
+            logger.error(e.message)
+        }
+    }
+    static async removeParticipant(chatId,data){
+        try{
+            var result = await client.get().collection('ChatRooms').updateOne(chatId,data)
+            return 'join'
+        }catch(e){
+            logger.error(e.message)
+        }
+    }
+    static async findParticipant(userId,chatId){
+        
+        try{
+            var chat = await client.get().collection('ChatRooms').findOne(chatId)
+            var check = chat.participants.find(item=>item.userid==userId)
+            if(check===undefined){
+                return 'join';
+            }else{
+                return 'leave';
+            }
+            
+        }catch(e){
+            logger.error(e.message)
+        }
+    }
     static async findChatAndInsertMsg(chatId,newMessage){
         try{
             var result = await client.get().collection('ChatRooms').findOneAndUpdate(chatId,newMessage)

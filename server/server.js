@@ -22,9 +22,9 @@ const io = new Server(httpServer, {
 app.use('/', routes)
 
 io.on("connection", (socket) => {
-  socket.on('createRoom', roomId => {
-    socket.join(roomId);
-    console.log(roomId)
+  socket.on('createRoom', joiningInfo => {
+    socket.join(joiningInfo.chatId);
+    console.log(`user ${joiningInfo.userId} joined ${joiningInfo.chatId}`)
   })
   socket.on('leftRoom', data=>{
     console.log(`${data.user} has left chat ${data.chatID}`) //for back end
